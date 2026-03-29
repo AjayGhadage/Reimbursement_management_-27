@@ -1,25 +1,9 @@
-// Use the correct port (5173 is Vite default, 3000 is CRA default)
 const API_URL = 'http://localhost:5000/api/auth';
 
-// Add this to check if backend is reachable
 export const authService = {
-  async checkBackend() {
-    try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
-        method: 'OPTIONS'
-      });
-      console.log('Backend is reachable');
-      return true;
-    } catch (error) {
-      console.error('Backend not reachable:', error);
-      return false;
-    }
-  },
-
   async signup(userData) {
     try {
-      console.log('Sending signup request to:', `${API_URL}/signup`);
-      console.log('With data:', userData);
+      console.log('Sending signup request');
       
       const response = await fetch(`${API_URL}/signup`, {
         method: 'POST',
@@ -30,22 +14,22 @@ export const authService = {
       });
       
       const data = await response.json();
-      console.log('Response:', data);
       
       if (!response.ok) {
-        throw new Error(data.message || 'Signup failed');
+        // Don't expose specific errors
+        throw new Error(data.message || 'Registration failed. Please try again.');
       }
       
       return data;
     } catch (error) {
       console.error('Signup error:', error);
-      throw new Error(error.message || 'Cannot connect to server. Please make sure backend is running on port 5000');
+      throw new Error('Unable to create account. Please check your information and try again.');
     }
   },
 
   async login(credentials) {
     try {
-      console.log('Sending login request to:', `${API_URL}/login`);
+      console.log('Sending login request');
       
       const response = await fetch(`${API_URL}/login`, {
         method: 'POST',
@@ -58,7 +42,8 @@ export const authService = {
       const data = await response.json();
       
       if (!response.ok) {
-        throw new Error(data.message || 'Login failed');
+        // Generic error message for all failures
+        throw new Error('Invalid email, password, or role. Please check your credentials.');
       }
       
       if (data.token) {
@@ -69,7 +54,7 @@ export const authService = {
       return data;
     } catch (error) {
       console.error('Login error:', error);
-      throw new Error('Cannot connect to server. Please make sure backend is running on port 5000');
+      throw new Error('Invalid email, password, or role. Please check your credentials.');
     }
   },
 
@@ -92,5 +77,15 @@ export const authService = {
 
   isAuthenticated() {
     return !!this.getToken();
+  },
+
+  getUserRole() {
+    const user = this.getCurrentUser();
+    return user?.role || 'EMPLOYEE';
+  },
+
+  hasRole(role) {
+    const userRole = this.getUserRole();
+    return userRole === role;
   }
 };

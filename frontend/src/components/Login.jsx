@@ -5,11 +5,18 @@ import '../styles/auth.css';
 const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
   const [formData, setFormData] = useState({
     email: '',
-    password: ''
+    password: '',
+    role: 'EMPLOYEE'
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  const roles = [
+    { value: 'EMPLOYEE', label: '👤 Employee', description: 'Submit and track expenses' },
+    { value: 'MANAGER', label: '📊 Manager', description: 'Approve/reject team expenses' },
+    { value: 'ADMIN', label: '⚙️ Admin', description: 'Full system access' }
+  ];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -17,13 +24,13 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
       ...prev,
       [name]: value
     }));
-    setError('');
+    setError(''); // Clear error on typing
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!formData.email || !formData.password) {
+    if (!formData.email || !formData.password || !formData.role) {
       setError('Please fill in all fields');
       return;
     }
@@ -37,6 +44,7 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
         onLoginSuccess(response.user);
       }
     } catch (err) {
+      // Display generic error message
       setError(err.message);
     } finally {
       setLoading(false);
@@ -79,8 +87,43 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
                 className="auth-input"
                 placeholder="you@example.com"
                 disabled={loading}
+                required
               />
             </div>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Login as</label>
+            <div className="input-wrapper">
+              <div className="input-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+              </div>
+              <select
+                name="role"
+                value={formData.role}
+                onChange={handleChange}
+                className="auth-input"
+                style={{ appearance: 'none', cursor: 'pointer' }}
+                disabled={loading}
+                required
+              >
+                {roles.map(role => (
+                  <option key={role.value} value={role.value}>
+                    {role.label}
+                  </option>
+                ))}
+              </select>
+              <div className="input-icon" style={{ right: '0.75rem', left: 'auto', pointerEvents: 'none' }}>
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
+            <small style={{ color: 'var(--text)', fontSize: '0.75rem', marginTop: '0.25rem' }}>
+              {roles.find(r => r.value === formData.role)?.description}
+            </small>
           </div>
 
           <div className="form-group">
@@ -99,6 +142,7 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
                 className="auth-input"
                 placeholder="••••••••"
                 disabled={loading}
+                required
               />
               <button
                 type="button"
