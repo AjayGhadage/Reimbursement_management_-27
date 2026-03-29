@@ -1,22 +1,37 @@
-import express from "express";
-import cors from "cors";
-import expenseRoutes from "./routes/expense.routes.js";
-import authRoutes from "./routes/auth.routes.js";
-import approvalRuleRoutes from "./routes/approval.routes.js";
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
 
- 
+dotenv.config();
 
 const app = express();
 
-app.use(cors());
+// Middleware
+app.use(cors({
+  origin: ['http://localhost:5173', 'http://localhost:3000'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
-app.use("/api/auth", authRoutes);
-app.use("/api/rules", approvalRuleRoutes);
+app.use(express.urlencoded({ extended: true }));
 
-app.use("/api/expenses", expenseRoutes);
+// Import routes
+import authRoutes from './routes/auth.routes.js';
 
-app.get("/", (req, res) => {
-  res.send("API running 🚀");
+// Routes - make sure this is correct
+app.use('/api/auth', authRoutes);
+
+// Test route
+app.get('/', (req, res) => {
+  res.json({ message: 'Backend is running!' });
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  const status = err.status || 500;
+  const message = err.message || 'Something went wrong';
+  res.status(status).json({ message });
 });
 
 export default app;
