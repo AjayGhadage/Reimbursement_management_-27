@@ -1,29 +1,15 @@
 import express from "express";
-import ApprovalRule from "../models/approvalRule.model.js";
+import { getRule, updateRule } from "../controllers/approval.controller.js";
 import { authMiddleware } from "../middleware/auth.middleware.js";
+import { authorizeRoles } from "../middleware/role.middleware.js";
 
 const router = express.Router();
 
-// Create / Update (single default rule)
-router.post("/", authMiddleware, async (req, res) => {
-  const { name, steps } = req.body;
+router.use(authMiddleware);
 
-  let rule = await ApprovalRule.findOne();
-  if (rule) {
-    rule.name = name;
-    rule.steps = steps;
-    await rule.save();
-  } else {
-    rule = await ApprovalRule.create({ name, steps });
-  }
-
-  res.json(rule);
-});
-
-// Get rule
-router.get("/", authMiddleware, async (req, res) => {
-  const rule = await ApprovalRule.findOne();
-  res.json(rule);
-});
+// Only ADMIN can update rules
+router.get("/", authorizeRoles("ADMIN"), getRule);
+router.post("/", authorizeRoles("ADMIN"), updateRule);
+router.put("/", authorizeRoles("ADMIN"), updateRule);
 
 export default router;

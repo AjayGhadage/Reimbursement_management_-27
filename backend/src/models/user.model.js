@@ -7,13 +7,18 @@ const userSchema = new mongoose.Schema({
 
   role: {
     type: String,
-    enum: ["ADMIN", "MANAGER", "EMPLOYEE"],
+    enum: ["ADMIN", "MANAGER", "EMPLOYEE", "FINANCE", "DIRECTOR"],
     default: "EMPLOYEE"
   },
 
   managerId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
+  },
+
+  companyId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Company"
   }
 
 }, { timestamps: true });
