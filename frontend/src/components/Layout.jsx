@@ -3,7 +3,7 @@ import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { 
   BarChart3, PlusCircle, LayoutDashboard, Settings, 
-  Users, LogOut, Menu, X, Bell, Wallet, User
+  Users, LogOut, Menu, X, Bell, Wallet, User, Info
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Chatbot from './Chatbot';
@@ -21,6 +21,7 @@ export default function Layout() {
     { name: 'Approvals', path: '/approvals', icon: <BarChart3 size={22} /> },
     { name: 'Rules', path: '/admin/rules', icon: <Settings size={22} />, role: 'ADMIN' },
     { name: 'Users', path: '/admin/users', icon: <Users size={22} />, role: 'ADMIN' },
+    { name: 'About Us', path: '/about', icon: <Info size={22} /> },
   ];
 
   const handleLogout = () => {
@@ -136,6 +137,20 @@ export default function Layout() {
         </div>
 
         <Outlet />
+
+        {/* Global Footer */}
+        <footer style={{ 
+          marginTop: 'auto', 
+          padding: '24px 20px', 
+          borderTop: '1px solid var(--border)', 
+          textAlign: 'center',
+          background: 'rgba(255, 255, 255, 0.3)',
+          backdropFilter: 'blur(10px)'
+        }}>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: '500' }}>
+            &copy; 2026 ExpenseOS. All Rights Reserved. | Made with ❤️ by the Pioneers
+          </p>
+        </footer>
       </main>
 
       {/* Mobile Menu Overlay */}

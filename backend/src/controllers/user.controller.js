@@ -56,6 +56,10 @@ export const updateUser = async (req, res) => {
     const { role, managerId } = req.body;
 
     const adminUser = await User.findById(req.userId);
+    if (!adminUser || !adminUser.companyId) {
+      return res.status(403).json({ message: "Admin context not found or no company associated." });
+    }
+
 
     const userToUpdate = await User.findById(id);
     if (!userToUpdate) {

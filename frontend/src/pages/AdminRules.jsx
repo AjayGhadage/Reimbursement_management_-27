@@ -59,12 +59,12 @@ export default function AdminRules() {
         
         {/* Core Workflow Section */}
         <section className="glass bento-item" style={{ padding: '40px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
-            <h3 style={{ fontSize: '1.4rem', display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div className="responsive-flex" style={{ paddingBottom: '24px', borderBottom: '1px solid var(--border)', marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <h3 style={{ fontSize: '1.2rem', display: 'flex', alignItems: 'center', gap: '12px' }}>
               <Shield size={22} color="var(--accent-primary)" />
               Approval Pipeline
             </h3>
-            <button className="btn-secondary" style={{ padding: '8px 16px', fontSize: '0.85rem' }} onClick={addStep}>
+            <button className="btn-secondary" style={{ padding: '8px 16px', fontSize: '0.85rem', width: '100%', maxWidth: 'max-content' }} onClick={addStep}>
               <Plus size={16} /> Add Stage
             </button>
           </div>
@@ -115,7 +115,7 @@ export default function AdminRules() {
             Logic Settings
           </h3>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px' }}>
+          <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px' }}>
              <div>
                <label style={{ display: 'block', marginBottom: '12px', fontWeight: '700', color: 'var(--text-muted)', fontSize: '0.85rem' }}>VALUATION RULE</label>
                <select value={rule.ruleType} onChange={(e) => setRule({ ...rule, ruleType: e.target.value })}>

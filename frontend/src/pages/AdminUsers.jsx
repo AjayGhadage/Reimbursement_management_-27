@@ -62,12 +62,12 @@ export default function AdminUsers() {
 
   return (
     <div style={{ paddingBottom: '60px' }}>
-      <div className="page-header" style={{ marginBottom: '40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="page-header responsive-flex" style={{ marginBottom: '40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1 className="heading-accent" style={{ fontSize: '2.5rem' }}>Interconnected User Directory</h1>
           <p style={{ color: 'var(--text-muted)', marginTop: '8px' }}>Manage roles, hierarchies and interconnected functionalities.</p>
         </div>
-        <button className="btn-primary" onClick={() => setShowAddModal(true)} style={{ padding: '14px 28px' }}>
+        <button className="btn-primary" onClick={() => setShowAddModal(true)} style={{ padding: '14px 28px', width: '100%', maxWidth: 'max-content' }}>
           <UserPlus size={20} /> Add New User
         </button>
       </div>
@@ -175,7 +175,7 @@ export default function AdminUsers() {
                 <label className="label-accent">TEMPORARY PASSWORD</label>
                 <input required type="password" value={newUserData.password} onChange={(e) => setNewUserData({...newUserData, password: e.target.value})} placeholder="••••••••" />
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+              <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                  <div>
                     <label className="label-accent">ROLE</label>
                     <select value={newUserData.role} onChange={(e) => setNewUserData({...newUserData, role: e.target.value})}>

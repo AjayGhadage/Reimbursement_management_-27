@@ -221,9 +221,34 @@ tr td:last-child { border-radius: 0 12px 12px 0; }
 .status-badge.pending { background: #fef3c7; color: #92400e; }
 .status-badge.rejected { background: #fee2e2; color: #991b1b; }
 
+/* Responsive Utilities */
+.hide-mobile {
+  display: flex !important;
+}
+
+.show-mobile {
+  display: none !important;
+}
+
 @media (max-width: 1024px) {
+  .hide-mobile {
+    display: none !important;
+  }
+  
+  .show-mobile {
+    display: flex !important;
+  }
+
   .bento-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .app-container {
+    flex-direction: column;
+  }
+
+  .main-content {
+    padding: 20px;
   }
 }
 
@@ -231,7 +256,21 @@ tr td:last-child { border-radius: 0 12px 12px 0; }
   .bento-grid {
     grid-template-columns: 1fr;
   }
-  .main-content {
-    padding: 24px;
+  
+  .responsive-flex {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 16px !important;
   }
+
+  .responsive-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .main-content {
+    padding: 16px;
+  }
+
+  h1 { font-size: 1.8rem !important; }
+  h2 { font-size: 1.4rem !important; }
 }

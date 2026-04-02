@@ -39,9 +39,12 @@ if (users.length > 0) {
   );
   console.log(`Set ${users[0].name} (${users[0].email}) as ADMIN`);
 
-  // Assign companyId to all other users
+  // Assign companyId to all other users who lack one
   const updateResult = await db.collection("users").updateMany(
-    { companyId: { $in: [null, undefined] } },
+    { $or: [
+        { companyId: { $in: [null, undefined, ""] } },
+        { companyId: { $exists: false } }
+    ]},
     { $set: { companyId: companyId } }
   );
   console.log(`Assigned companyId to ${updateResult.modifiedCount} additional users.`);

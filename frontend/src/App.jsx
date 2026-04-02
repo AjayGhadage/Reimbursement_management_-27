@@ -10,6 +10,9 @@ import ExpenseSubmit from "./pages/ExpenseSubmit";
 import ApprovalsQueue from "./pages/ApprovalsQueue";
 import AdminRules from "./pages/AdminRules";
 import AdminUsers from "./pages/AdminUsers";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+import About from "./pages/About";
 
 function PrivateRoute({ children, allowRoles }) {
   const { user, loading } = useContext(AuthContext);
@@ -26,6 +29,9 @@ export default function App() {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/about" element={<About />} />
 
       <Route path="/" element={<PrivateRoute><Layout /></PrivateRoute>}>
         <Route index element={<Dashboard />} />

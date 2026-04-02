@@ -165,9 +165,9 @@ export default function ExpenseSubmit() {
         </motion.div>
 
         {/* Transaction Form */}
-        <div className="glass bento-item" style={{ padding: '48px' }}>
+        <div className="glass bento-item" style={{ padding: '24px' }}>
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+            <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
               <div>
                 <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: 'var(--text-muted)', fontSize: '0.8rem' }}>DESCRIPTION</label>
                 <input name="description" value={formData.description} onChange={handleChange} required placeholder="What was this for?" />
@@ -185,7 +185,7 @@ export default function ExpenseSubmit() {
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+            <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
               <div>
                 <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: 'var(--text-muted)', fontSize: '0.8rem' }}>TRANSACTION DATE</label>
                 <input type="date" name="date" value={formData.date} onChange={handleChange} required />
@@ -234,7 +234,7 @@ export default function ExpenseSubmit() {
       <style>{`
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @media (max-width: 900px) {
-          .bento-grid-mobile { grid-template-columns: 1fr ! from; }
+          .bento-grid-mobile { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </motion.div>

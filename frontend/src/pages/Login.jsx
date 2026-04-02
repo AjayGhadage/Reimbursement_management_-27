@@ -40,7 +40,7 @@ export default function Login() {
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
       <div 
         className="bg-overlay" 
-        style={{ backgroundImage: `url('/images/login_bg.png')` }} 
+        style={{ backgroundImage: `url('/images/login_v2.png')` }} 
       />
       
       <motion.div 
@@ -76,7 +76,7 @@ export default function Login() {
           </motion.div>
         )}
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
           <div>
             <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
               EMAIL ADDRESS
@@ -88,9 +88,14 @@ export default function Login() {
           </div>
 
           <div>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
-              PASSWORD
-            </label>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+              <label style={{ fontWeight: '600', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+                PASSWORD
+              </label>
+              <Link to="/forgot-password" style={{ fontSize: '0.8rem', color: 'var(--accent-primary)', textDecoration: 'none', fontWeight: '600' }}>
+                Forgot?
+              </Link>
+            </div>
             <div style={{ position: 'relative' }}>
               <input name="password" type="password" required placeholder="••••••••" onChange={handleChange} style={{ paddingLeft: '48px' }} />
               <Lock size={18} color="var(--text-muted)" style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)' }} />

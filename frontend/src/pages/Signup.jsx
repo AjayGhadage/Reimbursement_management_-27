@@ -1,16 +1,18 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { Building, Lock, Mail, Globe, UserPlus, Wallet } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { AuthContext } from '../context/AuthContext';
 
 export default function Signup() {
   const [formData, setFormData] = useState({
-    name: '', email: '', password: '', companyName: '', country: ''
+    name: '', email: '', password: '', role: 'EMPLOYEE', companyName: '', country: ''
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -19,10 +21,20 @@ export default function Signup() {
     setError('');
     setLoading(true);
     try {
-      await axios.post('/api/auth/signup', formData);
-      navigate('/login', { state: { message: 'Signup successful! Please log in.' } });
+      const res = await axios.post('/api/auth/signup', formData);
+      const { user, token } = res.data;
+      
+      // Auto-login upon successful interconnected signup
+      login(user, token);
+
+      if (user.role === 'ADMIN') navigate('/admin/rules');
+      else if (user.role === 'MANAGER' || user.role === 'FINANCE' || user.role === 'DIRECTOR') navigate('/approvals');
+      else navigate('/');
+
     } catch (err) {
-      setError(err.response?.data?.message || 'An error occurred during signup');
+      console.error("❌ Signup Axis Error:", err);
+      const backendError = err.response?.data?.message || err.response?.data?.error || err.message || 'Server unreachable. Check connection.';
+      setError(backendError);
     } finally {
       setLoading(false);
     }
@@ -32,7 +44,7 @@ export default function Signup() {
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 20px', position: 'relative' }}>
       <div 
         className="bg-overlay" 
-        style={{ backgroundImage: `url('/C:/Users/AJAY%20GHADAGE/.gemini/antigravity/brain/9fd6b6fa-a4b8-4e50-845d-058f60b84a75/bg_login_reg_1774783495753.png')` }} 
+        style={{ backgroundImage: `url('/images/signup_v2.png')`, opacity: 0.9 }} 
       />
 
       <motion.div 
@@ -51,7 +63,7 @@ export default function Signup() {
             <UserPlus size={28} />
           </div>
           <h1 className="heading-accent" style={{ fontSize: '2.2rem', marginBottom: '8px' }}>Join ExpenseOS</h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>Setting up your enterprise workspace.</p>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>Create your interconnected account.</p>
         </div>
 
         {error && (
@@ -82,26 +94,26 @@ export default function Signup() {
                 <Lock size={18} color="var(--text-muted)" style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)' }} />
               </div>
             </div>
+
+            <div>
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: 'var(--text-muted)', fontSize: '0.85rem' }}>SELECT YOUR ROLE</label>
+              <select name="role" required onChange={handleChange}>
+                <option value="EMPLOYEE">Employee (Submits Requests)</option>
+                <option value="MANAGER">Manager (Approves Team Requests)</option>
+                <option value="FINANCE">Finance (Audits All Requests)</option>
+                <option value="DIRECTOR">Director (Final Sign-off)</option>
+                <option value="ADMIN">Administrator (Governance & Setup)</option>
+              </select>
+            </div>
           </div>
 
           <div style={{ marginTop: '12px', paddingTop: '32px', borderTop: '1px solid var(--border)' }}>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '20px', fontWeight: '500' }}>
-              <strong>Workspace Admin:</strong> If you are creating a new company, enter details below.
-            </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
               <div>
                 <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: 'var(--text-muted)', fontSize: '0.85rem' }}>COMPANY NAME</label>
                 <div style={{ position: 'relative' }}>
-                  <input name="companyName" type="text" placeholder="Acme Global Inc." onChange={handleChange} style={{ paddingLeft: '48px' }} />
-                  <Building size={18} color="var(--text-muted)" style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)' }} />
-                </div>
-              </div>
-
-              <div>
-                <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: 'var(--text-muted)', fontSize: '0.85rem' }}>BASE COUNTRY</label>
-                <div style={{ position: 'relative' }}>
-                  <input name="country" type="text" placeholder="e.g. United States, India" onChange={handleChange} style={{ paddingLeft: '48px' }} />
-                  <Globe size={18} color="var(--text-muted)" style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)' }} />
+                   <input name="companyName" type="text" placeholder="Acme Global Inc." onChange={handleChange} style={{ paddingLeft: '48px' }} />
+                   <Building size={18} color="var(--text-muted)" style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)' }} />
                 </div>
               </div>
             </div>

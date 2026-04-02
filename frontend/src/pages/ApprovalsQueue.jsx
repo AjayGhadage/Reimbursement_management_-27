@@ -31,7 +31,8 @@ export default function ApprovalsQueue() {
       setSelectedExpense(null);
       setComment('');
     } catch (err) {
-      alert("Action failed. Try again later.");
+      console.error("❌ Action Error:", err);
+      alert(err.response?.data?.message || err.response?.data?.error || err.message || "Action failed.");
     }
   };
 
@@ -42,7 +43,7 @@ export default function ApprovalsQueue() {
         <p style={{ color: 'var(--text-muted)', marginTop: '8px' }}>Review and manage pending reimbursement requests from your team.</p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: selectedExpense ? '1fr 1fr' : '1fr', gap: '32px', transition: 'all 0.4s' }}>
+      <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: selectedExpense ? '1fr 1fr' : '1fr', gap: '32px', transition: 'all 0.4s' }}>
         
         {/* List View */}
         <div className="glass bento-item" style={{ padding: '32px' }}>
@@ -80,10 +81,17 @@ export default function ApprovalsQueue() {
                         <div style={{ width: '32px', height: '32px', background: 'var(--accent-light)', color: 'var(--accent-primary)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                           <User size={14} />
                         </div>
-                        <span style={{ fontWeight: '600' }}>Team Member</span>
+                        <span style={{ fontWeight: '600' }}>{exp.createdBy?.name || "Team Member"}</span>
                       </div>
                     </td>
-                    <td>{exp.category}</td>
+                    <td>
+                      <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        <span style={{ fontWeight: '500' }}>{exp.category}</span>
+                        <span style={{ fontSize: '0.75rem', color: 'var(--accent-primary)', fontWeight: '700' }}>
+                          STAGE {exp.approvals?.find(a => a.status === 'PENDING')?.step || '?'} PENDING
+                        </span>
+                      </div>
+                    </td>
                     <td style={{ fontWeight: '700' }}>{exp.amount} {exp.currency}</td>
                     <td>{new Date(exp.date).toLocaleDateString()}</td>
                     <td><ChevronRight size={18} color="var(--text-muted)" /></td>
@@ -117,7 +125,7 @@ export default function ApprovalsQueue() {
                   <button onClick={() => setSelectedExpense(null)} style={{ background: 'transparent' }}><ChevronRight style={{ transform: 'rotate(90deg)' }} /></button>
                </div>
 
-               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+               <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
                   <div className="card" style={{ padding: '20px', background: 'rgba(255,255,255,0.4)' }}>
                     <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '4px' }}>SUBMITTED AMOUNT</div>
                     <div style={{ fontSize: '1.5rem', fontWeight: '800', color: 'var(--text-main)' }}>{selectedExpense.amount} {selectedExpense.currency}</div>
@@ -136,7 +144,23 @@ export default function ApprovalsQueue() {
                </div>
 
                <div>
-                 <label style={{ display: 'block', marginBottom: '8px', fontWeight: '700', fontSize: '0.85rem', color: 'var(--text-muted)' }}>ADD COMMENT (OPTIONAL)</label>
+                 <label style={{ display: 'block', marginBottom: '12px', fontWeight: '700', fontSize: '0.85rem', color: 'var(--text-muted)' }}>WORKFLOW HISTORY (INTERCONNECTED)</label>
+                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '24px' }}>
+                    {selectedExpense.approvals?.filter(a => a.status !== 'WAITING' && a.status !== 'PENDING').map((a, idx) => (
+                      <div key={idx} style={{ padding: '12px 16px', background: 'rgba(0,0,0,0.03)', borderRadius: '12px', fontSize: '0.85rem', borderLeft: `4px solid ${a.status === 'APPROVED' ? '#22c55e' : '#ef4444'}` }}>
+                        <div style={{ fontWeight: '700', display: 'flex', justifyContent: 'space-between' }}>
+                          <span>Stage {a.step} Result</span>
+                          <span style={{ color: a.status === 'APPROVED' ? '#166534' : '#991b1b' }}>{a.status}</span>
+                        </div>
+                        <p style={{ margin: '4px 0', fontSize: '0.85rem' }}>{a.comment || 'Approved without additional comments.'}</p>
+                      </div>
+                    ))}
+                    {(!selectedExpense.approvals || selectedExpense.approvals.filter(a => a.status !== 'PENDING').length === 0) && (
+                      <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>Initial stage: Waiting for first review.</p>
+                    )}
+                 </div>
+
+                 <label style={{ display: 'block', marginBottom: '8px', fontWeight: '700', fontSize: '0.85rem', color: 'var(--text-muted)' }}>ADD YOUR COMMENT (OPTIONAL)</label>
                  <textarea 
                     value={comment} 
                     onChange={(e) => setComment(e.target.value)}

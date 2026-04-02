@@ -70,7 +70,7 @@ export default function Dashboard() {
         }} 
       />
 
-      <div className="page-header" style={{ marginBottom: '40px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+      <div className="page-header responsive-flex" style={{ marginBottom: '40px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
         <div>
           <motion.h1 
             initial={{ x: -20, opacity: 0 }}
@@ -82,12 +82,12 @@ export default function Dashboard() {
           </motion.h1>
           <p style={{ color: 'var(--text-muted)', marginTop: '8px', fontSize: '1.1rem' }}>Here's what's happening with your expenses today.</p>
         </div>
-        <Link to="/submit">
+        <Link to="/submit" style={{ width: '100%', maxWidth: 'max-content' }}>
           <motion.button 
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="btn-primary" 
-            style={{ padding: '16px 32px' }}
+            style={{ padding: '16px 32px', width: '100%' }}
           >
             <Plus size={20} />
             New Reimbursement
