@@ -2,46 +2,38 @@ import pytesseract
 from PIL import Image
 import io
 import re
-
 import os
 
-tesseract_path = os.getenv("TESSERACT_CMD", r"C:\Program Files\Tesseract-OCR\tesseract.exe")
-pytesseract.pytesseract.tesseract_cmd = tesseract_path
+# Support both Windows (default) and Linux/Docker paths
+tesseract_cmd = os.getenv("TESSERACT_CMD", r"C:\Program Files\Tesseract-OCR\tesseract.exe")
+pytesseract.pytesseract.tesseract_cmd = tesseract_cmd
+
 
 def extract_text(image_bytes):
-    try:
-        image = Image.open(io.BytesIO(image_bytes))
-        text = pytesseract.image_to_string(image)
-        return text
-    except Exception as e:
-        print(f"OCR Error: {e}")
-        return ""
+    image = Image.open(io.BytesIO(image_bytes))
+    image = image.convert("L")  # improve OCR
+    text = pytesseract.image_to_string(image)
+    return text
+
 
 def parse_receipt(text):
-    # Search for amounts (e.g., $10.00, 500.00 INR, INR 500)
-    # This is a basic regex, could be improved
-    amount_match = re.search(r"(\$|INR|Rs|EUR|GBP)?\s*(\d+[\.,]\d{2})", text, re.IGNORECASE)
-    
-    amount = 0
-    currency = "USD"
-    
-    if amount_match:
-        cur_sym = amount_match.group(1)
-        if cur_sym:
-            if cur_sym.upper() in ["INR", "RS"]: currency = "INR"
-            elif cur_sym == "$": currency = "USD"
-            elif cur_sym.upper() == "EUR": currency = "EUR"
-            elif cur_sym.upper() == "GBP": currency = "GBP"
-        
-        amount = float(amount_match.group(2).replace(",", "."))
+    amount = None
+    date = None
 
-    # Search for dates
-    date_match = re.search(r"(\d{2}[-/]\d{2}[-/]\d{4}|\d{4}[-/]\d{2}[-/]\d{2})", text)
-    date_str = date_match.group(1) if date_match else ""
+    text = text.replace(",", "").replace("\n", " ")
+
+    # Amount
+    amount_match = re.findall(r'₹?\s?(\d+(?:\.\d{1,2})?)', text)
+    if amount_match:
+        amount = max([float(a) for a in amount_match])
+
+    # Date
+    date_match = re.search(r'(\d{2}[/-]\d{2}[/-]\d{2,4})', text)
+    if date_match:
+        date = date_match.group(1)
 
     return {
         "amount": amount,
-        "currency": currency,
-        "date": date_str,
-        "description": "Scanned Expense"
+        "date": date,
+        "category": "Food"
     }

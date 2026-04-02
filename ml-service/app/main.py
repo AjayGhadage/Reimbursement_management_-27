@@ -1,10 +1,6 @@
 from fastapi import FastAPI
-from app.routes import ocr_routes
+from app.routes.ocr_routes import router as ocr_router
 
-app = FastAPI(title="ML OCR Service")
+app = FastAPI()
 
-app.include_router(ocr_routes.router, prefix="/api/ocr", tags=["OCR"])
-
-@app.get("/")
-def read_root():
-    return {"message": "ML OCR Service is running 🚀"}
+app.include_router(ocr_router, prefix="/ocr")
