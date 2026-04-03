@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../services/api';
 import { Mail, ArrowLeft, Send } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -16,7 +16,7 @@ export default function ForgotPassword() {
     setMessage('');
     setLoading(true);
     try {
-      const res = await axios.post('/api/auth/forgot-password', { email });
+      const res = await api.post('/api/auth/forgot-password', { email });
       setMessage(res.data.message);
     } catch (err) {
       setError(err.response?.data?.message || 'Something went wrong');

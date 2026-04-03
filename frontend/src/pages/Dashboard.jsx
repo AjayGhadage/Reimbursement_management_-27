@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import api from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import { 
   TrendingUp, Clock, CheckCircle, AlertCircle, 
@@ -21,7 +21,7 @@ export default function Dashboard() {
 
   const fetchExpenses = async () => {
     try {
-      const res = await axios.get('/api/expenses/my');
+      const res = await api.get('/api/expenses/my');
       setExpenses(res.data);
       if (res.data.length > 0) fetchAiInsight(res.data);
     } catch (err) {
@@ -34,7 +34,7 @@ export default function Dashboard() {
   const fetchAiInsight = async (data) => {
     try {
       const summary = data.map(e => `${e.amount} ${e.currency} on ${e.category}`).join(', ');
-      const res = await axios.post('/api/chat', { 
+      const res = await api.post('/api/chat', { 
         message: `Analyze this expense summary and give a one-sentence friendly tip: ${summary}` 
       });
       setAiInsight(res.data.response);

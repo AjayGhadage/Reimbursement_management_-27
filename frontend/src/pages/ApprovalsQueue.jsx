@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../services/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle, XCircle, FileText, ChevronRight, Clock, DollarSign, User } from 'lucide-react';
 
@@ -15,7 +15,7 @@ export default function ApprovalsQueue() {
 
   const fetchPending = async () => {
     try {
-      const res = await axios.get('/api/expenses/pending');
+      const res = await api.get('/api/expenses/approvals');
       setExpenses(res.data);
     } catch (err) {
       console.error(err);
@@ -26,7 +26,7 @@ export default function ApprovalsQueue() {
 
   const handleAction = async (expenseId, action) => {
     try {
-      await axios.put(`/api/expenses/${expenseId}/approve`, { action, comment });
+      await api.post(`/api/expenses/${expenseId}/approve`, { status: action, comment });
       fetchPending();
       setSelectedExpense(null);
       setComment('');

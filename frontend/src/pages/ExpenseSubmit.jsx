@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import axios from 'axios';
+import api, { mlApi } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import { UploadCloud, FileText, CheckCircle, Sparkles, AlertCircle, ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -31,7 +31,7 @@ export default function ExpenseSubmit() {
       formDataML.append('file', file);
 
       try {
-        const res = await axios.post('/ml/ocr', formDataML, {
+        const res = await mlApi.post('/api/ocr', formDataML, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
         
@@ -69,7 +69,7 @@ export default function ExpenseSubmit() {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post('/api/expenses', formData);
+      await api.post('/api/expenses', formData);
       navigate('/');
     } catch (err) {
       const msg = err.response?.data?.message || err.response?.data?.error || err.message || "Unknown error";

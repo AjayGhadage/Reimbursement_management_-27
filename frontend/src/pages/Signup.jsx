@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../services/api';
 import { Building, Lock, Mail, Globe, UserPlus, Wallet } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { AuthContext } from '../context/AuthContext';
@@ -21,7 +21,7 @@ export default function Signup() {
     setError('');
     setLoading(true);
     try {
-      const res = await axios.post('/api/auth/signup', formData);
+      const res = await api.post('/api/auth/signup', formData);
       const { user, token } = res.data;
       
       // Auto-login upon successful interconnected signup

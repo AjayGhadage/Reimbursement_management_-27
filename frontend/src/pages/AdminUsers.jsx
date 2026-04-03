@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../services/api';
 import { motion } from 'framer-motion';
 import { Users, UserPlus, RefreshCcw, Save, Trash2, ShieldCheck, User as UserIcon } from 'lucide-react';
 
@@ -19,7 +19,7 @@ export default function AdminUsers() {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get('/api/users');
+      const res = await api.get('/api/users');
       setUsers(res.data);
     } catch (err) {
       console.error("Fetch Users Error:", err);
@@ -35,7 +35,7 @@ export default function AdminUsers() {
 
   const handleUpdate = async (id) => {
     try {
-      await axios.put(`/api/users/${id}`, editFormData);
+      await api.put(`/api/users/${id}`, editFormData);
       setEditingId(null);
       fetchUsers();
     } catch (err) {

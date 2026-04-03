@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../services/api';
 import { motion } from 'framer-motion';
 import { Shield, Settings, Plus, Trash2, ArrowRight, Check, AlertTriangle } from 'lucide-react';
 
@@ -18,7 +18,7 @@ export default function AdminRules() {
 
   const fetchRule = async () => {
     try {
-      const res = await axios.get('/api/admin/rules');
+      const res = await api.get('/api/rules');
       if (res.data) setRule(res.data);
     } catch (err) {
       console.error(err);
@@ -41,7 +41,7 @@ export default function AdminRules() {
 
   const handleSave = async () => {
     try {
-      await axios.post('/api/admin/rules', rule);
+      await api.post('/api/rules', rule);
       alert('Governance rules updated successfully.');
     } catch (err) {
       alert('Failed to save rules.');
